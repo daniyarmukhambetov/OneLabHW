@@ -15,6 +15,7 @@ func errorResponse(w http.ResponseWriter, r *http.Request, status int, message i
 	}
 }
 
+// зачем это ? 
 func serverErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	message := "the server encountered a problem and could not process your request"
 	errorResponse(w, r, http.StatusInternalServerError, message)

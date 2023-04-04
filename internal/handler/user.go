@@ -27,7 +27,7 @@ func (h *UserHandler) Retrieve(writer http.ResponseWriter, request *http.Request
 	id, err := strconv.Atoi(chi.URLParam(request, "id"))
 	if err != nil {
 		logger.Logger().Println("error", err)
-		errorResponse(writer, request, http.StatusBadRequest, "cannot parse id")
+		errorResponse(writer, request, http.StatusBadRequest, "cannot parse id") // тут молодец, предусмотрел ошибки
 		return
 	}
 	var user models.UserModel

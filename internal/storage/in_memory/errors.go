@@ -11,7 +11,7 @@ const UsernameDoesNotExist = "username does not exist"
 const EmailDuplication = "this email already taken"
 const UsernameDuplication = "this username already taken"
 
-var IDNotFoundError error
+var IDNotFoundError error // var IDNotFoundError = errors.New("some_text")
 var EmailDoesNotExistError error
 var UsernameDoesNotExistError error
 var EmailDuplicationError error

@@ -11,7 +11,7 @@ type Handler struct {
 }
 
 func NewHandler(cfg *config.Config) *Handler {
-	service := service2.NewManager(cfg.DBCfg.DbType)
+	service := service2.NewManager(cfg.DBCfg.DbType) // инициализация сервиса должна быть в main 
 	return &Handler{
 		User: NewUserHandler(cfg, service),
 	}

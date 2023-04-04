@@ -27,6 +27,7 @@ func writeJSON(w http.ResponseWriter, status int, data interface{}, headers http
 	return nil
 }
 
+// что это и зачем ? 
 func readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	// Use http.MaxBytesReader() to limit the size of the request body to 1MB.
 	maxBytes := 1_048_576

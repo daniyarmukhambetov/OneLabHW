@@ -16,8 +16,9 @@ import (
 func main() {
 	cfg := config.NewConfig()
 	router := transport.NewRouter(cfg)
+	// Почему здесь а не в отдельном файле ? 
 	srv := &http.Server{
-		Addr:           ":8080",
+		Addr:           ":8080", // нужно читать с конфигов 
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
