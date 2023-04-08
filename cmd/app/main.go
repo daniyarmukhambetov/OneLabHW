@@ -2,45 +2,60 @@ package main
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"github.com/joho/godotenv"
 	"hw1/internal/config"
-	"hw1/internal/logger"
+	handler2 "hw1/internal/handler"
+	"hw1/internal/service"
+	"hw1/internal/storage"
+	"hw1/internal/storage/postgres"
 	"hw1/internal/transport"
-	"net/http"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
+	"log"
 )
 
 func main() {
-	cfg := config.NewConfig()
-	router := transport.NewRouter(cfg)
-	srv := &http.Server{
-		Addr:           ":8080",
-		Handler:        router,
-		ReadTimeout:    10 * time.Second,
-		WriteTimeout:   10 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-	}
-	shutdownError := make(chan error)
-	go func() {
-		quit := make(chan os.Signal, 1)
-		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-		<-quit
-		logger.Logger().Println("shutting down server")
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		shutdownError <- srv.Shutdown(ctx)
-	}()
-	logger.Logger().Println("starting server")
-	err := srv.ListenAndServe()
-	if errors.Is(err, http.ErrServerClosed) {
-		return
-	}
-	err = <-shutdownError
+	err := godotenv.Load()
 	if err != nil {
-		return
+		log.Println(err)
 	}
-	logger.Logger().Println("server is stopped")
+	fmt.Println(config.GetEnv("DB_TYPE", "2"))
+	cfg := config.Config{
+		DBCfg: config.DBConfig{
+			DbName:     config.GetEnv("DB_NAME", "onelab1"),
+			DbHost:     config.GetEnv("DB_HOST", "localhost1"),
+			DbUser:     config.GetEnv("DB_USER", "admin1"),
+			DbPassword: config.GetEnv("USER_PASSWORD", "password1"),
+			DbPort:     config.GetEnv("DB_PORT", "54321"),
+			SSL:        config.GetEnv("SSL", "disable1"),
+		},
+		Addr:      config.GetEnv("ADDR", ":80801"),
+		Timezone:  config.GetEnv("TIMEZONE", "Asia/Almaty1"),
+		JWTSecret: []byte(config.GetEnv("JWT_SECRET", "secret")),
+	}
+	db, err := postgres.InitDB(&cfg)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	repo, err := storage.NewStorage(db)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	service, err := service.NewManager(repo, &cfg)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	handler, err := handler2.NewHandler(service)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	srv, err := transport.NewServer(&cfg, ctx, handler)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	err = srv.Run()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
