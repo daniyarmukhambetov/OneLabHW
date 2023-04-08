@@ -1,7 +1,7 @@
 package models
 
 type UserModel struct {
-	ID       int
+	ID       int `gorm:"primaryKey"`
 	Username string
 	Email    string
 	Name     string
@@ -20,6 +20,12 @@ type UserModelOut struct {
 type UserModelIn struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
+	Name     string `json:"name"`
+	LastName string `json:"last_name"`
+	Password string `json:"password"`
+}
+
+type UserUpdate struct {
 	Name     string `json:"name"`
 	LastName string `json:"last_name"`
 	Password string `json:"password"`

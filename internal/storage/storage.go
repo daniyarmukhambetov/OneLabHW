@@ -1,22 +1,42 @@
 package storage
 
 import (
+	"gorm.io/gorm"
 	"hw1/internal/models"
-	"hw1/internal/storage/in_memory"
+	"hw1/internal/storage/postgres"
 )
 
 type Storage struct {
-	User IUser
+	User     IUser
+	Book     IBook
+	BookUser IBookUser
 }
 
-func NewStorage() *Storage {
-	return &Storage{User: in_memory.NewUserRepo()}
+func NewStorage(db *gorm.DB) (*Storage, error) {
+	return &Storage{
+		User:     postgres.NewUser(db),
+		Book:     postgres.NewBook(db),
+		BookUser: postgres.NewBookUser(db),
+	}, nil
 }
 
 type IUser interface {
-	List() []models.UserModel
-	Retrieve(int) (models.UserModel, error)
+	List() ([]models.UserModel, error)
+	Retrieve(string) (models.UserModel, error)
 	Create(models.UserModelIn) (models.UserModel, error)
-	Update(int, models.UserModelIn) (models.UserModel, error)
-	Delete(int) (int, error)
+	Update(string, models.UserUpdate) (models.UserModel, error)
+	Delete(string) (string, error)
+}
+
+type IBook interface {
+	List() ([]models.Book, error)
+	Retrieve(name string) (models.Book, error)
+	Create(book models.Book) (models.Book, error)
+	Update(book models.Book) (models.Book, error)
+	Delete(name string) (string, error)
+}
+
+type IBookUser interface {
+	List() ([]models.BookUser, error)
+	ListUserBookCount(string) ([]models.UserBookCount, error)
 }

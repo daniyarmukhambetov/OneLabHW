@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"hw1/internal/config"
-	service2 "hw1/internal/service"
+	"hw1/internal/service"
 	"net/http"
 )
 
@@ -10,15 +9,18 @@ type Handler struct {
 	User IUserHandler
 }
 
-func NewHandler(cfg *config.Config) *Handler {
-	service := service2.NewManager(cfg.DBCfg.DbType)
+func NewHandler(service *service.Manager) (*Handler, error) {
 	return &Handler{
-		User: NewUserHandler(cfg, service),
-	}
+		User: NewUserHandler(service),
+	}, nil
 }
 
 type IUserHandler interface {
 	List(http.ResponseWriter, *http.Request)
 	Retrieve(http.ResponseWriter, *http.Request)
 	Create(http.ResponseWriter, *http.Request)
+	GetJWT(http.ResponseWriter, *http.Request)
+	Update(http.ResponseWriter, *http.Request)
+	GetBooks(http.ResponseWriter, *http.Request)
+	ListUserBookCount(http.ResponseWriter, *http.Request)
 }

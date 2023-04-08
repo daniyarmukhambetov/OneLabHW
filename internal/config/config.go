@@ -6,24 +6,22 @@ import (
 )
 
 type DBConfig struct {
-	DbURL  string
-	DbType int
+	DbName     string
+	DbHost     string
+	DbUser     string
+	DbPassword string
+	DbPort     string
+	SSL        string
 }
 
 type Config struct {
-	DBCfg DBConfig
+	DBCfg     DBConfig
+	Addr      string
+	Timezone  string
+	JWTSecret []byte
 }
 
-func NewConfig() *Config {
-	return &Config{
-		DBCfg: DBConfig{
-			DbURL:  getEnv("DB_URL", ""),
-			DbType: getEnvAsInt("DB_TYPE", 0),
-		},
-	}
-}
-
-func getEnv(key string, defaultVal string) string {
+func GetEnv(key string, defaultVal string) string {
 	if value, exists := os.LookupEnv(key); exists {
 		return value
 	}
@@ -31,8 +29,8 @@ func getEnv(key string, defaultVal string) string {
 	return defaultVal
 }
 
-func getEnvAsInt(name string, defaultVal int) int {
-	valueStr := getEnv(name, "")
+func GetEnvAsInt(name string, defaultVal int) int {
+	valueStr := GetEnv(name, "")
 	if value, err := strconv.Atoi(valueStr); err == nil {
 		return value
 	}
