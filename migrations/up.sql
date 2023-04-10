@@ -17,5 +17,9 @@ CREATE TABLE books
 CREATE TABLE book_user
 (
     book_name VARCHAR(255),
-    user_id   INT
-)
+    user_id   INT,
+    returned  BOOLEAN,
+    taken_date VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (book_name) REFERENCES books(name) ON DELETE CASCADE
+);

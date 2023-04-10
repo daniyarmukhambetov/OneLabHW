@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"hw1/internal/config"
+	"hw1/config"
 	"hw1/internal/logger"
 	"hw1/internal/models"
 	"hw1/internal/storage"

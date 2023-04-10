@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"hw1/internal/config"
+	"hw1/config"
 )
 
 func InitDB(cfg *config.Config) (*gorm.DB, error) {

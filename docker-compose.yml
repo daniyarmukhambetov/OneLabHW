@@ -1,0 +1,34 @@
+version: "3.9"
+
+networks:
+  internal:
+    external: false
+
+volumes:
+  loan-api_data:
+
+services:
+  app:
+    network_mode: bridge
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/src
+    networks:
+      - internal
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:13.2-alpine
+    volumes:
+      - loan-api_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - internal
+    ports:
+      - "5432:5432"

@@ -2,7 +2,7 @@ package transport
 
 import (
 	"context"
-	"hw1/internal/config"
+	"hw1/config"
 	"hw1/internal/handler"
 	"hw1/internal/logger"
 	"net/http"
