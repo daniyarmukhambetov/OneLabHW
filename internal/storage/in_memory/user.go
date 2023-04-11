@@ -12,33 +12,33 @@ func NewUserRepo() *UserRepo {
 	return &UserRepo{}
 }
 
-func (r *UserRepo) List() []models.UserModel {
+func (r *UserRepo) List() []models.User {
 	return data
 }
 
-func (r *UserRepo) Retrieve(i int) (models.UserModel, error) {
+func (r *UserRepo) Retrieve(i int) (models.User, error) {
 	for _, user := range data {
 		if user.ID == i {
 			return user, nil
 		}
 	}
 	logger.Logger().Println("db error", IDNotFoundError)
-	return models.UserModel{}, IDNotFoundError
+	return models.User{}, IDNotFoundError
 }
 
-func (r *UserRepo) Create(u models.UserModelIn) (models.UserModel, error) {
+func (r *UserRepo) Create(u models.UserModelIn) (models.User, error) {
 	for _, user := range data {
 		if user.Email == u.Email {
 			logger.Logger().Println("db error", EmailDuplicationError)
-			return models.UserModel{}, EmailDuplicationError
+			return models.User{}, EmailDuplicationError
 		}
 		if user.Username == u.Username {
 			logger.Logger().Println("db error", UsernameDuplicationError)
-			return models.UserModel{}, UsernameDuplicationError
+			return models.User{}, UsernameDuplicationError
 		}
 	}
 	data = append(data,
-		models.UserModel{
+		models.User{
 			ID:       len(data) + 1,
 			Username: u.Username,
 			Email:    u.Email,
@@ -51,20 +51,20 @@ func (r *UserRepo) Create(u models.UserModelIn) (models.UserModel, error) {
 	return data[len(data)-1], nil
 }
 
-func (r *UserRepo) Update(i int, u models.UserModelIn) (models.UserModel, error) {
+func (r *UserRepo) Update(i int, u models.UserModelIn) (models.User, error) {
 	for _, user := range data {
 		if user.Email == u.Email {
 			logger.Logger().Println("db error", EmailDuplicationError)
-			return models.UserModel{}, EmailDuplicationError
+			return models.User{}, EmailDuplicationError
 		}
 		if user.Username == u.Username {
 			logger.Logger().Println("db error", UsernameDuplicationError)
-			return models.UserModel{}, UsernameDuplicationError
+			return models.User{}, UsernameDuplicationError
 		}
 	}
 	for _, user := range data {
 		if user.ID == i {
-			user = models.UserModel{
+			user = models.User{
 				ID:       len(data) + 1,
 				Username: u.Username,
 				Email:    u.Email,
@@ -75,7 +75,7 @@ func (r *UserRepo) Update(i int, u models.UserModelIn) (models.UserModel, error)
 		}
 	}
 	logger.Logger().Println("db error", IDNotFoundError)
-	return models.UserModel{}, IDNotFoundError
+	return models.User{}, IDNotFoundError
 }
 
 func (r *UserRepo) Delete(i int) (int, error) {

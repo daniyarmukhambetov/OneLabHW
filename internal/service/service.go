@@ -21,10 +21,10 @@ func NewManager(storage *storage.Storage, cfg *config.Config) (*Manager, error) 
 }
 
 type IUserService interface {
-	List() ([]models.UserModel, error)
-	Retrieve(string) (models.UserModel, error)
-	Create(models.UserModelIn) (models.UserModel, error)
-	Update(string, models.UserUpdate) (models.UserModel, error)
+	List() ([]models.User, error)
+	Retrieve(string) (models.User, error)
+	Create(models.UserModelIn) (models.User, error)
+	Update(string, models.UserUpdate) (models.User, error)
 	Delete(string) (string, error)
 	GetJWT(string, string) (models.JWT, error)
 }

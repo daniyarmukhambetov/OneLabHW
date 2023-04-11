@@ -29,7 +29,7 @@ func (h *UserHandler) List(writer http.ResponseWriter, request *http.Request) {
 
 func (h *UserHandler) Retrieve(writer http.ResponseWriter, request *http.Request) {
 	username := chi.URLParam(request, "username")
-	var user models.UserModel
+	var user models.User
 	user, err := h.Service.User.Retrieve(username)
 	if err != nil {
 		errorResponse(writer, request, http.StatusBadRequest, err.Error())
@@ -49,7 +49,7 @@ func (h *UserHandler) Create(writer http.ResponseWriter, request *http.Request) 
 		errorResponse(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
-	var user models.UserModel
+	var user models.User
 	user, err = h.Service.User.Create(userIn)
 	if err != nil {
 		errorResponse(writer, request, http.StatusBadRequest, err.Error())
@@ -67,7 +67,7 @@ func (h *UserHandler) Update(writer http.ResponseWriter, request *http.Request) 
 	fmt.Println(username)
 	//fmt.Println(request.Context())
 	//username := "usr"
-	var usr models.UserModel
+	var usr models.User
 	usr, err := h.Service.User.Retrieve(username)
 	if err != nil {
 		serverErrorResponse(writer, request, err)
@@ -83,7 +83,7 @@ func (h *UserHandler) Update(writer http.ResponseWriter, request *http.Request) 
 		errorResponse(writer, request, http.StatusBadRequest, err.Error())
 		return
 	}
-	var user models.UserModel
+	var user models.User
 	user, err = h.Service.User.Update(usr.Username, userUpdate)
 	if err != nil {
 		errorResponse(writer, request, http.StatusBadRequest, err.Error())

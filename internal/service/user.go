@@ -22,33 +22,33 @@ func NewUserService(repo *storage.Storage, cfg *config.Config) *UserService {
 	}
 }
 
-func (s *UserService) List() ([]models.UserModel, error) {
+func (s *UserService) List() ([]models.User, error) {
 	return s.Repo.User.List()
 }
 
-func (s *UserService) Retrieve(username string) (models.UserModel, error) {
+func (s *UserService) Retrieve(username string) (models.User, error) {
 	res, err := s.Repo.User.Retrieve(username)
 	if err != nil {
-		return models.UserModel{}, err
+		return models.User{}, err
 	}
 	return res, nil
 }
 
-func (s *UserService) Create(in models.UserModelIn) (models.UserModel, error) {
+func (s *UserService) Create(in models.UserModelIn) (models.User, error) {
 	hash, err := pkg.HashPassword(in.Password)
 	if err != nil {
 		logger.Logger().Println(err)
-		return models.UserModel{}, err
+		return models.User{}, err
 	}
 	in.Password = hash
 	return s.Repo.User.Create(in)
 }
 
-func (s *UserService) Update(i string, in models.UserUpdate) (models.UserModel, error) {
+func (s *UserService) Update(i string, in models.UserUpdate) (models.User, error) {
 	hash, err := pkg.HashPassword(in.Password)
 	if err != nil {
 		logger.Logger().Println(err)
-		return models.UserModel{}, err
+		return models.User{}, err
 	}
 	in.Password = hash
 	return s.Repo.User.Update(i, in)

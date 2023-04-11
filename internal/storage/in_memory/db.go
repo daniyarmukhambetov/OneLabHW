@@ -4,8 +4,8 @@ import (
 	"hw1/internal/models"
 )
 
-var data []models.UserModel
+var data []models.User
 
 func init() {
-	data = make([]models.UserModel, 0)
+	data = make([]models.User, 0)
 }

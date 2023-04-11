@@ -10,8 +10,8 @@ type User struct {
 	db *gorm.DB
 }
 
-func (r *User) List() ([]models.UserModel, error) {
-	var users []models.UserModel
+func (r *User) List() ([]models.User, error) {
+	var users []models.User
 	tx := r.db.Raw("SELECT * FROM users").Scan(&users)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -19,17 +19,17 @@ func (r *User) List() ([]models.UserModel, error) {
 	return users, nil
 }
 
-func (r *User) Retrieve(i string) (models.UserModel, error) {
+func (r *User) Retrieve(i string) (models.User, error) {
 	sql := fmt.Sprintf("SELECT * FROM users WHERE username = '%s'", i)
-	var user models.UserModel
+	var user models.User
 	tx := r.db.Raw(sql).Scan(&user)
 	if tx.Error != nil {
-		return models.UserModel{}, tx.Error
+		return models.User{}, tx.Error
 	}
 	return user, nil
 }
 
-func (r *User) Create(in models.UserModelIn) (models.UserModel, error) {
+func (r *User) Create(in models.UserModelIn) (models.User, error) {
 	sql := fmt.Sprintf(
 		"INSERT INTO users (username, email, name, last_name, password) VALUES ('%s', '%s', '%s', '%s', '%s')",
 		in.Username,
@@ -38,22 +38,22 @@ func (r *User) Create(in models.UserModelIn) (models.UserModel, error) {
 		in.LastName,
 		in.Password,
 	)
-	var user models.UserModel
+	var user models.User
 	var id int
 	fmt.Println(id)
 	tx := r.db.Raw(sql).Scan(&id)
 	if tx.Error != nil {
-		return models.UserModel{}, tx.Error
+		return models.User{}, tx.Error
 	}
 	return user, nil
 }
 
-func (r *User) Update(i string, in models.UserUpdate) (models.UserModel, error) {
+func (r *User) Update(i string, in models.UserUpdate) (models.User, error) {
 	sql := fmt.Sprintf("UPDATE users SET name = '%s', last_name = '%s', password = '%s' WHERE username = '%s'", in.Name, in.LastName, in.Password, i)
-	var user models.UserModel
+	var user models.User
 	tx := r.db.Raw(sql).Scan(&user)
 	if tx.Error != nil {
-		return models.UserModel{}, tx.Error
+		return models.User{}, tx.Error
 	}
 	return user, nil
 }
