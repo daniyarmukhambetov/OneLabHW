@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/joho/godotenv"
 	"hw1/config"
 	handler2 "hw1/internal/handler"
@@ -11,6 +10,8 @@ import (
 	"hw1/internal/storage/postgres"
 	"hw1/internal/transport"
 	"log"
+	"os"
+	"os/signal"
 )
 
 func main() {
@@ -18,13 +19,12 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(config.GetEnv("DB_TYPE", "2"))
 	cfg := config.Config{
 		DBCfg: config.DBConfig{
-			DbName:     config.GetEnv("DB_NAME", "postgres"),
-			DbHost:     config.GetEnv("DB_HOST", "postgres"),
-			DbUser:     config.GetEnv("DB_USER", "postgres"),
-			DbPassword: config.GetEnv("DB_PASSWORD", "postgres"),
+			DbName:     config.GetEnv("DB_NAME", "onelab"),
+			DbHost:     config.GetEnv("DB_HOST", "localhost"),
+			DbUser:     config.GetEnv("DB_USER", "admin"),
+			DbPassword: config.GetEnv("DB_PASSWORD", "password"),
 			DbPort:     config.GetEnv("DB_PORT", "5432"),
 			SSL:        config.GetEnv("SSL", "disable"),
 		},
@@ -54,8 +54,15 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt)
+	go func() {
+		log.Println(<-sig)
+		cancel()
+	}()
 	err = srv.Run()
 	if err != nil {
 		log.Fatalln(err)
 	}
+	<-srv.Conn
 }
