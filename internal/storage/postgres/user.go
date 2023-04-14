@@ -70,3 +70,11 @@ func (r *User) Delete(i string) (string, error) {
 func NewUser(db *gorm.DB) *User {
 	return &User{db: db}
 }
+
+type IUser interface {
+	List() ([]models.User, error)
+	Retrieve(string) (models.User, error)
+	Create(models.UserModelIn) (models.User, error)
+	Update(string, models.UserUpdate) (models.User, error)
+	Delete(string) (string, error)
+}

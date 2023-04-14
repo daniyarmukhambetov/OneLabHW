@@ -24,3 +24,8 @@ func (s *BookUser) ListUserBookCount() ([]models.UserBookCount, error) {
 func NewBookUser(repo *storage.Storage) *BookUser {
 	return &BookUser{Repo: repo}
 }
+
+type IBookUserService interface {
+	List() ([]models.BookUser, error)
+	ListUserBookCount() ([]models.UserBookCount, error)
+}

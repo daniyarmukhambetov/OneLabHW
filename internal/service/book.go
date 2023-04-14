@@ -32,3 +32,11 @@ func (r *Book) Delete(s string, err error) (string, error) {
 func NewBook(repo *storage.Storage) *Book {
 	return &Book{Repo: repo}
 }
+
+type IBookService interface {
+	List() ([]models.Book, error)
+	Retrieve(string, error) (models.Book, error)
+	Create(models.Book, error) (models.Book, error)
+	Update(models.Book, error) (models.Book, error)
+	Delete(string, error) (string, error)
+}
