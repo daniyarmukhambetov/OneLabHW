@@ -15,6 +15,10 @@ import (
 )
 
 func main() {
+	log.Fatalln(run())
+}
+
+func run() error {
 	err := godotenv.Load()
 	if err != nil {
 		log.Println(err)
@@ -34,25 +38,26 @@ func main() {
 	}
 	db, err := postgres.InitDB(&cfg)
 	if err != nil {
-		log.Fatalln(err)
+		return err
+
 	}
 	repo, err := storage.NewStorage(db)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	service, err := service.NewManager(repo, &cfg)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	handler, err := handler2.NewHandler(service)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	srv, err := transport.NewServer(&cfg, ctx, handler)
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt)
@@ -62,7 +67,8 @@ func main() {
 	}()
 	err = srv.Run()
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	<-srv.Conn
+	return nil
 }
