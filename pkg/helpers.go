@@ -1,8 +1,11 @@
 package pkg
 
 import (
+	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
+	"io/ioutil"
+	"net/http"
 	"time"
 )
 
@@ -36,4 +39,20 @@ func GenerateJWT(username string, secret []byte) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func MakeRequest(URL string) string {
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", URL, nil)
+	req.Header.Set("Header_Key", "Header_Value")
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Err is", err)
+	}
+	defer res.Body.Close()
+
+	resBody, _ := ioutil.ReadAll(res.Body)
+	response := string(resBody)
+
+	return response
 }

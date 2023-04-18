@@ -1,9 +1,9 @@
 package dto
 
 type BookRented struct {
-	Book       string
-	Users      []string
-	TotalPrice float64
+	Book        string   `json:"book"`
+	Users       []string `json:"active_users"`
+	TotalAmount float64  `json:"total_amount"`
 }
 
 type UserRented struct {
@@ -13,4 +13,9 @@ type UserRented struct {
 
 type BookName struct {
 	Name string `json:"book_name"`
+}
+
+type BookTransaction struct {
+	Book        string  `json:"book"`
+	TotalAmount float64 `json:"total_amount"`
 }
