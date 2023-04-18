@@ -2,20 +2,41 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/joho/godotenv"
 	"hw1/config"
-	handler2 "hw1/internal/handler"
-	"hw1/internal/service"
-	"hw1/internal/storage"
-	"hw1/internal/storage/postgres"
-	"hw1/internal/transport"
+	_ "hw1/docs"
+	handler2 "hw1/handler"
+	"hw1/service"
+	"hw1/storage"
+	"hw1/storage/postgres"
+	"hw1/transport"
 	"log"
 	"os"
 	"os/signal"
 )
 
+// @title           Swagger Example API
+// @version         1.0
+// @description     This is a sample server celler server.
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   API Support
+// @contact.url    http://www.swagger.io/support
+// @contact.email  support@swagger.io
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host      127.0.0.1:8080
+// @BasePath  /api
+
+// @securityDefinitions.basic  BasicAuth
+
+// @externalDocs.description  OpenAPI
+// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
-	log.Fatalln(run())
+	log.Fatalln(fmt.Sprintf("server err %s"), run().Error())
 }
 
 func run() error {
