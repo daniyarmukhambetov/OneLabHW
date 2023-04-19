@@ -8,14 +8,13 @@ import (
 )
 
 func InitDB(cfg *config.Config) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
-		cfg.DBCfg.DbHost,
+	dsn := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=%s host=%s port=%s",
 		cfg.DBCfg.DbUser,
 		cfg.DBCfg.DbPassword,
 		cfg.DBCfg.DbName,
-		cfg.DBCfg.DbPort,
 		cfg.DBCfg.SSL,
-		cfg.Timezone,
+		cfg.DBCfg.DbHost,
+		cfg.DBCfg.DbPort,
 	)
 	fmt.Println(dsn)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

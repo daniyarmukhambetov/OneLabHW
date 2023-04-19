@@ -47,7 +47,7 @@ func run() error {
 	cfg := config.Config{
 		DBCfg: config.DBConfig{
 			DbName:     config.GetEnv("DB_NAME", "onelab"),
-			DbHost:     config.GetEnv("DB_HOST", "localhost"),
+			DbHost:     config.GetEnv("DB_HOST", "db"),
 			DbUser:     config.GetEnv("DB_USER", "admin"),
 			DbPassword: config.GetEnv("DB_PASSWORD", "password"),
 			DbPort:     config.GetEnv("DB_PORT", "5432"),
@@ -57,6 +57,7 @@ func run() error {
 		Timezone:  config.GetEnv("TIMEZONE", "Asia/Almaty"),
 		JWTSecret: []byte(config.GetEnv("JWT_SECRET", "secret")),
 	}
+	fmt.Println(cfg)
 	db, err := postgres.InitDB(&cfg)
 	if err != nil {
 		return err

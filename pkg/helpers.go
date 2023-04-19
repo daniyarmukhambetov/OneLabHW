@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
@@ -41,9 +42,9 @@ func GenerateJWT(username string, secret []byte) (string, error) {
 	return tokenString, nil
 }
 
-func MakeRequest(URL string) string {
+func MakeRequest(URL string, method string) string {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", URL, nil)
+	req, _ := http.NewRequest(method, URL, nil)
 	req.Header.Set("Header_Key", "Header_Value")
 	res, err := client.Do(req)
 	if err != nil {
@@ -54,5 +55,20 @@ func MakeRequest(URL string) string {
 	resBody, _ := ioutil.ReadAll(res.Body)
 	response := string(resBody)
 
+	return response
+}
+
+func MakePostRequest(URL string, data []byte) string {
+	client := &http.Client{}
+	body := bytes.NewBuffer(data)
+	req, _ := http.NewRequest("POST", URL, body)
+	req.Header.Set("Content-Type", "application/json")
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Err is", err)
+	}
+	defer res.Body.Close()
+	resBody, _ := ioutil.ReadAll(res.Body)
+	response := string(resBody)
 	return response
 }

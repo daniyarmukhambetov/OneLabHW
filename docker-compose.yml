@@ -8,7 +8,7 @@ volumes:
   loan-api_data:
 
 services:
-  app:
+  srv1:
     network_mode: bridge
     build:
       dockerfile: Dockerfile
@@ -19,19 +19,17 @@ services:
     networks:
       - internal
     depends_on:
-      - postgres
-  postgres:
+      - db
+  db:
     image: postgres:13.2-alpine
     volumes:
       - loan-api_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${PG_NAME}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
     networks:
       - internal
-    ports:
-      - "5432:5432"
   redis:
     image: redis:alpine
     networks:

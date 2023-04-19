@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"hw1/dto"
 	"hw1/pkg"
 	"hw1/storage"
@@ -42,7 +43,7 @@ func (s *Rent) RentedBooks() ([]dto.BookRented, error) {
 	}
 	ret = append(ret, book)
 	var bookTransactions []dto.BookTransaction
-	response := pkg.MakeRequest("http://127.0.0.1:8000/transactions")
+	response := pkg.MakeRequest("http://127.0.0.1:8000/transactions", "GET")
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +70,30 @@ func (s *Rent) RentedBooks() ([]dto.BookRented, error) {
 func (s *Rent) RentBook(username string, bookName string) (dto.UserRented, error) {
 	user, err := s.Repo.User.Retrieve(username)
 	if err != nil {
+		return dto.UserRented{}, nil
+	}
+	var data struct {
+		UserID   int     `json:"user_id"`
+		BookName string  `json:"book_name"`
+		Amount   float64 `json:"amount"`
+	}
+	var body struct {
+		UserID    int     `json:"user_id"`
+		BookName  string  `json:"book_name"`
+		Amount    float64 `json:"amount"`
+		ID        int64   `json:"id"`
+		CreatedAt string  `json:"created_at"`
+	}
+	data.BookName = bookName
+	data.Amount = 100
+	data.UserID = user.ID
+	fmt.Println(data)
+	b, _ := json.Marshal(&data)
+	response := pkg.MakePostRequest("http://127.0.0.1:8000/transactions", b)
+	resBytes := []byte(response)
+	err = json.Unmarshal(resBytes, &body)
+	if err != nil {
+		fmt.Println("there is", err, body)
 		return dto.UserRented{}, nil
 	}
 	res, err := s.Repo.BookUser.Create(bookName, user.ID)
